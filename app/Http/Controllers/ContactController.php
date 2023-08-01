@@ -85,7 +85,6 @@ class ContactController extends Controller
     }
 
 
-
     /**
      * Display the specified resource.
      */
@@ -207,6 +206,16 @@ class ContactController extends Controller
         $contact->forceDelete();
 
         return response()->json([], 204);
+    }
+
+    public function forceDeleteMultiple(Request $request,$ids){
+        $ids = explode(',',$ids);
+        $contacts = Contact::onlyTrashed()->whereIn('id',$ids)->get();
+        foreach($contacts as $contact){
+            $contact->forceDelete();
+        }
+
+        return response()->json(['message' => 'multiple contact restored successfully'],200);
     }
 
     public function forceDeleteAll(){

@@ -32,6 +32,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('restore-all',[ContactController::class,'restoreAll'])->name('contact.restoreAll');
         Route::delete('force-delete/{id}', [ContactController::class, 'forceDelete'])->name('contact.forceDelete');
         Route::delete('force-delete-all',[ContactController::class,'forceDeleteAll'])->name('contact.forceDeleteAll');
+        Route::delete('/delete-multiple/{ids}',[ContactController::class,'forceDeleteMultiple'])->name('contact.deleteMultiple');
         Route::post('logout', [ApiAuthController::class, 'logout']);
         Route::post('logout-all', [ApiAuthController::class, 'logoutAll']);
         Route::get('device', [ApiTokenCheck::class, 'device']);
