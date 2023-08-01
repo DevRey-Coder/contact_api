@@ -70,9 +70,21 @@ class ContactController extends Controller
                 return response()->json([
                     'message' => 'You are not allowed to restore this contact.'
                 ], 403);
-            }
+            } 
         }
     }
+
+    public function restoreMultiple(Request $request,$ids){
+        $ids = explode(',',$ids);
+        $contacts = Contact::onlyTrashed()->whereIn('id',$ids)->get();
+        foreach($contacts as $contact){
+            $contact->restore();
+        }
+
+        return response()->json(['message' => 'multiple contact restored successfully'],200);
+    }
+
+
 
     /**
      * Display the specified resource.
@@ -119,6 +131,14 @@ class ContactController extends Controller
         }
 
         return ContactResource::collection($contact);
+    }
+
+    public function restoreAll(){
+        Contact::withTrashed()->restore();
+
+        return response()->json([
+            'message' => 'Your trash are all restored'
+        ],200);
     }
 
     /**
@@ -187,5 +207,13 @@ class ContactController extends Controller
         $contact->forceDelete();
 
         return response()->json([], 204);
+    }
+
+    public function forceDeleteAll(){
+        Contact::onlyTrashed()->forceDelete();
+
+        return response()->json([
+            'message' => 'All contacts force deleted successfully'
+        ],203);
     }
 }
